@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice #{{ diagnosis.id }}</title>
+    <style>
+        body { font-family: Arial; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+        .header { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>{{ company.name }}</h2>
+        <p>{{ company.address }} | VAT: {{ company.Vatnumber }} | Tel: {{ company.tel }}</p>
+        <hr>
+    </div>
+
+    <h3>Invoice #{{ diagnosis.id }}</h3>
+    <p><strong>Customer:</strong> {{ diagnosis.customer.name }}</p>
+    <p><strong>Car:</strong> {{ diagnosis.car }}</p>
+    <p><strong>Date:</strong> {{ diagnosis.created_at }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in updates %}
+            <tr>
+                <td>{{ item.description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit_price }}</td>
+                <td>{{ item.line_total }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3"><strong>Grand Total</strong></td>
+                <td><strong>{{ total }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Diagnosis Details</h1>
+            <a href="{% url 'technician_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Car: {{ diagnosis.car }}</h5>
+                    <span class="badge bg-primary">{{ diagnosis.get_status_display }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Date:</strong> {{ diagnosis.diagnosis_date|date:"F j, Y, H:i" }}</p>
+                    <p><strong>Technician:</strong> {{ diagnosis.technician.username }}</p>
+                    
+                    <h5>Description</h5>
+                    <p>{{ diagnosis.description }}</p>
+                    
+                    <h5>Notes</h5>
+                    <p>{{ diagnosis.notes|default:"No notes added yet." }}</p>
+                    
+                    {% if diagnosis.completion_date %}
+                    <p><strong>Completed on:</strong> {{ diagnosis.completion_date|date:"F j, Y, H:i" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Update Status</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_status_update" class="form-label">Status</label>
+                            <select name="status_update" id="id_status_update" class="form-select">
+                                {% for value, label in status_choices %}
+                                <option value="{{ value }}" {% if value == diagnosis.status %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_notes" class="form-label">Notes</label>
+                            <textarea name="notes" id="id_notes" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Progress Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="badge bg-secondary">{{ diagnosis.get_status_display }}</span>
+                            <small class="text-muted">{{ diagnosis.diagnosis_date|date:"F j, Y, H:i" }}</small>
+                            <p class="mb-0">Diagnosis created</p>
+                        </li>
+                        <!-- In a real implementation, you would loop through status updates here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
